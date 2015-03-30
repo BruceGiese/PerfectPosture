@@ -1,0 +1,8 @@
+# Not sure if this is an overkill
+Application/
+bin/
+.settings
+test-output/
+.classpath
+.project
+
