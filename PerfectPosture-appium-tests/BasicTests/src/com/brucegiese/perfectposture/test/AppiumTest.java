@@ -60,6 +60,7 @@ public class AppiumTest {
 		goToScreen("DATA");
 		verifyRealTimeChartData();
 		goToScreen("SETTINGS");
+		
 
 		// uncheck all the checkboxes
 		changeCheckboxSetting("Send notification icons to the top of the screen to alert bad posture", false);
@@ -71,6 +72,9 @@ public class AppiumTest {
 		changeCheckboxSetting("Allow short vibrations to indicate bad posture", true);
 		changeCheckboxSetting("Turn on/off LED to alert bad posture (not implemented yet)", true);
 		changeCheckboxSetting("Get an alert every 15 minutes to do a chin tuck exercise", true);
+
+		// Select a sensitivity setting
+		selectSensitivity(LOW_SENSITIVITY);
 		
 		goToScreen("DATA");
 		goToScreen("INTRO");
@@ -82,7 +86,7 @@ public class AppiumTest {
 	 * Test rotations		(CURRENTLY DISABLED)
 	 * @throws InterruptedException
 	 */
-//	@Test
+	@Test
 	public void rotations() throws InterruptedException {
 		
 		// Make sure this we can rotate the screen
@@ -166,9 +170,27 @@ public class AppiumTest {
 		assert(value1 == value2);		// This assumes no one is handling the device during testing.
 	}
 	
+	/**
+	 * Select the specified sensitivity level.
+	 * This only works if you're already on the SETTINGS page.
+	 * @param value
+	 */
+	private static final String LOW_SENSITIVITY = "Low";		// Convenience strings for selectSensitivity()
+	private static final String MEDIUM_SENSITIVITY = "Medium";
+	private static final String HIGH_SENSITIVITY = "High";
+	
+	private void selectSensitivity(String value) {
+		WebElement setting =
+			driver.findElement(By.xpath("//android.widget.TextView[@text='This controls both the sensitivity and frequency of alerts.']/../.."));
+		setting.click();
+		WebElement radioButton = driver.findElementByName(value);
+		radioButton.click();
+	}
 	
 	/**
 	 * Checks the setting checkbox with the given string as text.
+	 * This only works if you're already on the SETTINGS page.
+	 * 
 	 * @param checkboxText	look for the checkbox with this string
 	 * @param check			true means to check the checkbox.  false means uncheck it
 	 * @return true means the checkbox was NOT already checked.  false means it was already in the
