@@ -4,6 +4,7 @@ import io.appium.java_client.AppiumDriver;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,10 +60,17 @@ public class AppiumTest {
 		goToScreen("DATA");
 		verifyRealTimeChartData();
 		goToScreen("SETTINGS");
-		
-// TODO: Currently seeing how to find and check settings checkboxes in a PreferenceFragment.
-//		WebElement t = driver.findElement(By.name("This controls both the sensitivity and frequency of alerts."))
-//		continue from here...	
+
+		// uncheck all the checkboxes
+		changeCheckboxSetting("Send notification icons to the top of the screen to alert bad posture", false);
+		changeCheckboxSetting("Allow short vibrations to indicate bad posture", false);
+		changeCheckboxSetting("Turn on/off LED to alert bad posture (not implemented yet)", false);
+		changeCheckboxSetting("Get an alert every 15 minutes to do a chin tuck exercise", false);
+		// check all the checkboxes
+		changeCheckboxSetting("Send notification icons to the top of the screen to alert bad posture", true);
+		changeCheckboxSetting("Allow short vibrations to indicate bad posture", true);
+		changeCheckboxSetting("Turn on/off LED to alert bad posture (not implemented yet)", true);
+		changeCheckboxSetting("Get an alert every 15 minutes to do a chin tuck exercise", true);
 		
 		goToScreen("DATA");
 		goToScreen("INTRO");
@@ -71,10 +79,10 @@ public class AppiumTest {
 	
 	
 	/**
-	 * Test rotations
+	 * Test rotations		(CURRENTLY DISABLED)
 	 * @throws InterruptedException
 	 */
-	@Test
+//	@Test
 	public void rotations() throws InterruptedException {
 		
 		// Make sure this we can rotate the screen
@@ -156,5 +164,31 @@ public class AppiumTest {
 
 		assert( index1 < index2);
 		assert(value1 == value2);		// This assumes no one is handling the device during testing.
+	}
+	
+	
+	/**
+	 * Checks the setting checkbox with the given string as text.
+	 * @param checkboxText	look for the checkbox with this string
+	 * @param check			true means to check the checkbox.  false means uncheck it
+	 * @return true means the checkbox was NOT already checked.  false means it was already in the
+	 * 			requested state and we did nothing.
+	 */
+	private boolean changeCheckboxSetting(String checkboxText, boolean check) {
+		WebElement setting =
+				driver.findElement(By.xpath("//android.widget.TextView[@text='" + checkboxText + "']/../.."));
+		WebElement checkbox =
+				setting.findElement(By.className("android.widget.LinearLayout")).findElement(By.className("android.widget.CheckBox"));
+
+		if( check == checkbox.getAttribute("checked").equals("true") ) {
+			System.out.println("Checkbox " + checkboxText + " is already in the requested state");
+			return false;
+		}
+		
+		setting.click();
+		
+		// Make sure the checkbox is now in the requested state
+		assert( check == checkbox.getAttribute("checked").equals("true"));
+		return true;
 	}
 }
