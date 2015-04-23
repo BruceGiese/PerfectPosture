@@ -57,7 +57,7 @@ public class AppiumTest {
 	@Test
 	public void smokeTest() throws InterruptedException {
 		startService();
-		goToScreen("DATA");
+		goToScreen("PERFORMANCE");
 		verifyRealTimeChartData();
 		goToScreen("SETTINGS");
 		
@@ -65,25 +65,23 @@ public class AppiumTest {
 		// uncheck all the checkboxes
 		changeCheckboxSetting("Send notification icons to the top of the screen to alert bad posture", false);
 		changeCheckboxSetting("Allow short vibrations to indicate bad posture", false);
-		changeCheckboxSetting("Turn on/off LED to alert bad posture (not implemented yet)", false);
 		changeCheckboxSetting("Get an alert every 15 minutes to do a chin tuck exercise", false);
 		// check all the checkboxes
 		changeCheckboxSetting("Send notification icons to the top of the screen to alert bad posture", true);
 		changeCheckboxSetting("Allow short vibrations to indicate bad posture", true);
-		changeCheckboxSetting("Turn on/off LED to alert bad posture (not implemented yet)", true);
 		changeCheckboxSetting("Get an alert every 15 minutes to do a chin tuck exercise", true);
 
 		// Select a sensitivity setting
 		selectSensitivity(LOW_SENSITIVITY);
 		
-		goToScreen("DATA");
-		goToScreen("INTRO");
+		goToScreen("PERFORMANCE");
+		goToScreen("PERFECT POSTURE");
 		stopService();
 	}
 	
 	
 	/**
-	 * Test rotations		(CURRENTLY DISABLED)
+	 * Test rotations
 	 * @throws InterruptedException
 	 */
 	@Test
@@ -98,15 +96,15 @@ public class AppiumTest {
 		stopService();
 		driver.rotate(ScreenOrientation.PORTRAIT);
 		startService();
-		goToScreen("DATA");
+		goToScreen("PERFORMANCE");
 		verifyRealTimeChartData();
 		driver.rotate(ScreenOrientation.LANDSCAPE);
 		verifyRealTimeChartData();
 		goToScreen("SETTINGS");
 		driver.rotate(ScreenOrientation.PORTRAIT);
-		goToScreen("DATA");
+		goToScreen("PERFORMANCE");
 		verifyRealTimeChartData();
-		goToScreen("INTRO");
+		goToScreen("PERFECT POSTURE");
 		stopService();
 	}
 	
@@ -151,11 +149,11 @@ public class AppiumTest {
 		WebElement chart2 = driver.findElement(By.id("com.brucegiese.perfectposture:id/chart"));
 		String text2 = chart2.getAttribute("name");
 		
-		assert(text1.contains("index is "));
-		assert(text2.contains(", value is "));
+		assert(text1.contains("index is"));
+		assert(text2.contains(", value is"));
 		
 		// format of text is "index is " + integer + ", value is " + float
-		Pattern p = Pattern.compile("index is (\\d+), value is (\\d*.\\d+)");
+		Pattern p = Pattern.compile("index is\\s*(\\d+), value is\\s*(\\d*.\\d+)");
 		Matcher m1 = p.matcher(text1);
 		Matcher m2 = p.matcher(text2);
 
